@@ -59,7 +59,7 @@ def create_parser():
                         help="Подстрока c датой используемая для замены в запросе (по умолчанию '%s')" %
                              DEFAULT_DATE_SUB_STRING)
 
-    parser.add_argument('-d', '--drop_errors', action='store_true',
+    parser.add_argument('-r', '--drop_errors', action='store_true',
                         help="Сброс ошибок")
 
     parser.add_argument('-s', '--show_connections', action='store_true',
