@@ -35,10 +35,10 @@ def create_parser():
                         help="Показать версию программы")
 
     parser.add_argument('-f', '--data_file', type=str, default=DEFAULT_DATA_FILE,
-                        help="Файл данных")
+                        help="Файл данных (по умолчанию %s)" % DEFAULT_DATA_FILE)
 
     parser.add_argument('-p', '--data_separator', type=str, default=DEFAULT_DATA_SEPARATOR,
-                        help="Разделитель вывода данных")
+                        help="Разделитель вывода данных(по умолчанию '%s')" % DEFAULT_DATA_SEPARATOR)
 
     parser.add_argument('-n', '--nagios_name', type=str,
                         help="Метка метрики в файле данных")
@@ -47,16 +47,17 @@ def create_parser():
                         help="Используемое подключение к БД")
 
     parser.add_argument('-w', '--warning_limit', type=int, default=DEFAULT_WARNING_LIMIT,
-                        help="Лимит для срабатывания WARNING")
+                        help="Лимит для срабатывания WARNING (по умолчанию %s)" % DEFAULT_WARNING_LIMIT)
 
     parser.add_argument('-c', '--critical_limit', type=int, default=DEFAULT_CRITICAL_LIMIT,
-                        help="Лимит для срабатывания CRITICAL")
+                        help="Лимит для срабатывания CRITICAL (по умолчанию %s)" % DEFAULT_CRITICAL_LIMIT)
 
     parser.add_argument('-q', '--query', type=str,
                         help="Запрос закодированный в base64")
 
     parser.add_argument('-b', '--date_sub_string', type=str, default=DEFAULT_DATE_SUB_STRING,
-                        help="Подстрока c датой используемая для замены в запросе")
+                        help="Подстрока c датой используемая для замены в запросе (по умолчанию '%s')" %
+                             DEFAULT_DATE_SUB_STRING)
 
     parser.add_argument('-d', '--drop_errors', action='store_true',
                         help="Сброс ошибок")
