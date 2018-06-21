@@ -121,7 +121,7 @@ def show_nagios_nm(j_file):
 def get_available_connections():
     """Функция получения доступных подключений mysql"""
     m = Mc()
-    return (cn for cn in m.__dir__() if cn.startswith('MS'))
+    return sorted([cn for cn in m.__dir__() if cn.startswith('MS')])
 
 
 def show_connects():
@@ -140,7 +140,7 @@ def get_query(string):
 def get_connection(connection_name):
     """Получение подключения"""
     if connection_name not in get_available_connections():
-        print('Unknown connection')
+        print('Неизвестное подключение ' % connection_name)
         s_exit(UNKNOWN)
 
     return Mc().__getattribute__(connection_name)
@@ -188,6 +188,10 @@ if __name__ == '__main__':
 
         # вывод списка доступных меток нагиос
         if namespace.show_nagios_names:
+            if not exists(data_file):
+                print('Файл данных %s не найден' % data_file)
+                s_exit(UNKNOWN)
+
             show_nagios_nm(data_file)
             s_exit(OK)
 
