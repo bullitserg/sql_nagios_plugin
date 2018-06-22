@@ -220,7 +220,6 @@ if __name__ == '__main__':
                 print(error_text % out_info_len)
                 for info_line in out_info:
                     print(translit(str(data_separator.join(info_line)), 'ru', reversed=True))
-                    print('\r\n')
 
                 if out_info_len >= critical_limit:
                     s_exit(CRITICAL)
