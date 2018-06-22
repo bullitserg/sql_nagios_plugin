@@ -7,6 +7,7 @@ from datetime import datetime
 from sys import exit as s_exit
 from ast import literal_eval
 from ets.ets_mysql_lib import MysqlConnection as Mc
+from transliterate import translit
 
 PROGNAME = 'Mysql query Nagios plugin'
 DESCRIPTION = '''Плагин Nagios для выполнения запросов (с возможностью сброса ошибок по дате)'''
@@ -23,8 +24,8 @@ DEFAULT_WARNING_LIMIT = 1
 DEFAULT_CRITICAL_LIMIT = 1
 
 date_format = '%Y-%m-%d %H:%M:%S'
-error_text = 'Обнаружено %s новыx ошибок:'
-no_error_text = 'Новые ошибки отсутствуют'
+error_text = 'Found %s new errors:'
+no_error_text = 'Errors not found'
 
 
 # обработчик параметров командной строки
@@ -113,7 +114,7 @@ def show_nagios_nm(j_file):
             tmp_json_r = tmp_json_f.read()
         json_loads_data = json.loads(tmp_json_r)
 
-    print('Доступные метки:')
+    print('Available nagios names:')
     for name, dtm in json_loads_data.items():
         print('%s (%s)' % (name, dtm))
 
@@ -125,7 +126,7 @@ def get_available_connections():
 
 
 def show_connects():
-    print('Доступные подключения:')
+    print('Available connections:')
     for connect in get_available_connections():
         print(connect)
 
@@ -140,7 +141,7 @@ def get_query(string):
 def get_connection(connection_name):
     """Получение подключения"""
     if connection_name not in get_available_connections():
-        print('Неизвестное подключение ' % connection_name)
+        print('Unknown connection %s' % connection_name)
         s_exit(UNKNOWN)
 
     return Mc().__getattribute__(connection_name)
@@ -149,7 +150,7 @@ def get_connection(connection_name):
 def check_arguments(args):
     for arg in args:
         if globals()[arg] is None:
-            print('Отсутствует аргумент %s' % arg)
+            print('Argument %s not set' % arg)
             s_exit(UNKNOWN)
 
 if __name__ == '__main__':
@@ -183,13 +184,13 @@ if __name__ == '__main__':
             check_arguments(('nagios_name', 'data_file'))
 
             get_datetime(data_file, nagios_name, update=True)
-            print('Ошибки успешно сброшены!')
+            print('Error drop successfully!')
             s_exit(OK)
 
         # вывод списка доступных меток нагиос
         if namespace.show_nagios_names:
             if not exists(data_file):
-                print('Файл данных %s не найден' % data_file)
+                print('Datafile %s not found' % data_file)
                 s_exit(UNKNOWN)
 
             show_nagios_nm(data_file)
@@ -217,7 +218,7 @@ if __name__ == '__main__':
                 out_info_len = len(out_info)
                 print(error_text % out_info_len)
                 for info_line in out_info:
-                    print(data_separator.join(info_line))
+                    print(translit(str(data_separator.join(info_line)), 'ru', reversed=True))
 
                 if out_info_len >= critical_limit:
                     s_exit(CRITICAL)
@@ -229,7 +230,7 @@ if __name__ == '__main__':
                 s_exit(OK)
 
     except Exception as err:
-        print('Ошибка плагина')
+        print('Plugin error')
         print(err)
         s_exit(UNKNOWN)
 
